@@ -2,30 +2,45 @@
 <div class="row">
     <h1 class="text-center">Edit Campground</h1>
     <div class="col-6 offset-3">
-      <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+      <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" novalidate class="validated-form">
         <div class="mb-3">
             <label class="form-label" for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="campground[title]"value="<%= campground.title %>">
-        </div>
+            <input type="text" class="form-control" id="title" name="campground[title]"value="<%= campground.title %>"required>
+             <div class="valid-feedback">
+      Looks good!
+    </div>
+          </div>
          <div class="mb-3">
             <label class="form-label" for="location">Location</label>
-            <input type="text"  class="form-control" id="location" name="campground[location]"value="<%= campground.location %>">
-        </div>
+            <input type="text"  class="form-control" id="location" name="campground[location]"value="<%= campground.location %>required">
+           <div class="valid-feedback">
+      Looks good!
+    </div>
+          </div>
             <div class="mb-3">
             <label class="form-label" for="description">Description</label>
-            <textarea type="text"  class="form-control" id="description" name="campground[description]"><%= campground.description %> </textarea>
-        </div>
+            <textarea type="text"  class="form-control" id="description" name="campground[description]" required><%= campground.description %> </textarea>
+               <div class="valid-feedback">
+      Looks good!
+    </div>
+            </div>
          <div class="mb-3">
             <label class="form-label" for="image">Image Url</label>
-            <input type="text"  class="form-control" id="image" name="campground[image]" value="<%= campground.image %>">
-        </div>
+            <input type="text"  class="form-control" id="image" name="campground[image]" value="<%= campground.image %>" required>
+           <div class="valid-feedback">
+      Looks good!
+    </div>
+          </div>
         <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
         <div class="input-group">
   <div class="input-group-prepend">
     <span class="input-group-text" id="price">$</span>
   </div>
-  <input type="text" class="form-control" placeholder="0" aria-label="price" aria-describedby="price-label"  name="campground[price]"value="<%= campground.price %>">
+  <input type="text" class="form-control" placeholder="0" aria-label="price" aria-describedby="price-label"  name="campground[price]"value="<%= campground.price %>" required>
+   <div class="valid-feedback">
+      Looks good!
+    </div>
 </div>
 
 </div><div class="mb-3"><button class="btn btn-success" >Edit Campground</button></div>
@@ -35,3 +50,23 @@
 
     </div>
 </div>
+
+<script>
+(() => {
+  'use strict'
+
+  const forms = document.querySelectorAll('.validated-form')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
