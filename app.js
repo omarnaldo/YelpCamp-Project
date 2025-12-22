@@ -7,6 +7,10 @@ const methodOverride= require('method-override');
 const catchAsync= require('./utils/catchAsync.js');
 const ExpressError=require('./utils/ExpressError.js')
 const {campgroundSchema}= require('./schemas.js')
+const Review = require('./models/review.js');
+const campground = require('./models/campground.js');
+
+
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp',)
@@ -85,7 +89,14 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res)=>{
    res.redirect('/campgrounds')
 }))
 
-
+app.post('/campgrounds/:id/reviews',catchAsync(async(req,res)=>{
+   const campground = await Campground.findById(req.params.id);
+   const review = new Review(req.body.review);
+   campground.reviews.push(review);
+   await campground.save();
+   await review.save();
+   res.redirect(`/campgrounds/${campground._id}`)
+}))
 
 app.all(/(.*)/, (req, res, next) => {
 next( new ExpressError('page not found', 404))})
