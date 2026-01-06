@@ -4,7 +4,7 @@ const catchAsync= require('../utils/catchAsync.js');
 const ExpressError=require('../utils/ExpressError.js')
 const Campground = require('../models/campground.js');
 const {campgroundSchema}= require('../schemas.js')
-
+const {isLoggedIn} = require('../middleware.js')
 
  const validateCampground=(req,res,next)=>{
    const {error} = campgroundSchema.validate(req.body.campground);
@@ -22,7 +22,7 @@ const {campgroundSchema}= require('../schemas.js')
  }));
 
 
- router.get('/new', (req,res)=>{
+ router.get('/new',isLoggedIn, (req,res)=>{
    res.render('campground/new')
 });
 
@@ -44,7 +44,7 @@ router.get('/:id', catchAsync(async (req,res)=>{
    res.render('campground/show', {campground})
 }));
 
-router.get('/:id/edit', catchAsync(async (req,res)=>{
+router.get('/:id/edit',isLoggedIn, catchAsync(async (req,res)=>{
  const campground=await Campground.findById(req.params.id);
  if(!campground){
       req.flash('error', 'Cannot find that campground')
