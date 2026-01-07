@@ -3,19 +3,10 @@ const router = express.Router({mergeParams : true});
 const catchAsync= require('../utils/catchAsync.js');
 const ExpressError=require('../utils/ExpressError.js')
 const Campground = require('../models/campground.js');
-const { reviewSchema}= require('../schemas.js')
 const Review = require('../models/review.js');
+const {validateReview} = require('../middleware.js')
 
 
-
-
-// review vaildtion, i have already put some client side vaildation but this to make sure nobody would sent an empty rev through postman
-const validateReview = (req,res,next)=>{
-   const {error} = reviewSchema.validate(req.body.Review);
-   if(error){
-      const msg = error.details.map(el=>el.message).join(',')
-      throw new ExpressError(msg,400)
-   }else{next();}}
 
 
 
