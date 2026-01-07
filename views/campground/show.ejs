@@ -10,13 +10,25 @@
     </div>
     <ul class="list-group list-group-flush">
    <li class="list-group-item text-muted"><%= campground.location %></li>
-   <li class="list-group-item">$<%= campground.price %>/night</li>
+    <li class="list-group-item text-muted">Submited by <%= campground.author.username%></li>
+    <li class="list-group-item">$<%= campground.price %>/night</li>
    </ul>
-   <div class="card-body">
-       <a href="/campgrounds/<%=campground._id%>/edit" class="btn btn-info me-2">Edit</a>
+      <div class="card-body">
+
+   <% if(currentUser&&campground.author.equals(currentUser._id)){ %>
+<a href="/campgrounds/<%= campground._id %>/edit"
+   class="btn pill px-4 shadow-sm"
+   style="background-color:#6f42c1; color:white;">
+  Edit
+</a>
+
+
+
+
    <form class="d-inline" action="/campgrounds/<%=campground._id %>?_method=DELETE" method="post">
   <button class="btn btn-danger">Delete</button>
             </form>
+            <% } %>
    <div class="mt-1 card-footer text-muted">
    2 days ago
    </div>    
@@ -52,7 +64,10 @@
             </div>
     <% } %>
         </div>
+<div class="card-footer mt-2 mb-3">
+  <a href="/campgrounds" class="btn btn-primary btn-lg squired-pill shadow-sm">
+    All Campgrounds
+  </a>
+</div>
 
-  <div class="card-footer text-muted mt-2"><button class="btn btn-danger"><a href="/campgrounds">All Campgrounds</a></div>
-          </button>   </div>
 
