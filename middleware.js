@@ -1,7 +1,7 @@
 const Campground = require('./models/campground')
 const ExpressError=require('./utils/ExpressError.js')
 const {campgroundSchema,reviewSchema}= require('./schemas.js')
-
+const Review = require('./models/review.js')
 
 module.exports.isLoggedIn=(req,res,next)=>{
     if(!req.isAuthenticated()){
@@ -48,3 +48,14 @@ module.exports.validateReview = (req,res,next)=>{
       throw new ExpressError(msg,400)
    }else{next();}}
 
+
+
+module.exports.isReviewAuthor = async (req,res,next)=>{
+   const {id,reviewId} = req.params;
+   const review = await Review.findById(reviewId);
+ if(!review.author.equals(req.user._id)){
+      req.flash('error', 'you dont have permission to edit this')
+     return  res.redirect(`/campgrounds/${id}`);
+   }
+  next();
+};
