@@ -1,4 +1,5 @@
 const Campground = require('../models/campground.js');
+const { cloudinary } = require('../cloudinary');
 
 // rendering all camps
 module.exports.index = async (req,res) => {
@@ -58,6 +59,19 @@ module.exports.renderEditForm = async (req,res)=>{
 module.exports.editCampground =  async (req, res)=>{
    const { id } = req.params;
  const campground= await Campground.findByIdAndUpdate(id, {...req.body.campground}, { new: true, runValidators: true })
+  const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+   campground.images.push(...imgs)
+   await campground.save()
+   if (req.body.deleteImages) {
+      let deleteImages = req.body.deleteImages;
+      if (!Array.isArray(deleteImages)) {
+         deleteImages = [deleteImages];  //If it wasn’t an array before, this line wraps it into an array. This way the loop works even with only one image.
+      }
+      for (const filename of deleteImages) {
+         await cloudinary.uploader.destroy(filename);
+      }
+      await campground.updateOne({ $pull: { images: { filename: { $in: deleteImages } } } });
+   }
    req.flash('success', 'Successfully updated campground')  
    res.redirect(`/campgrounds/${id}`)
 }
