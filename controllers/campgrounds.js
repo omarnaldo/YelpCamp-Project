@@ -29,13 +29,12 @@ const geoData = await maptilerClient.geocoding.forward(req.body.campground.locat
 const campground= new Campground(req.body.campground);
 
 campground.geometry = geoData.features[0].geometry;
-    campground.location = geoData.features[0].place_name;
+campground.location = geoData.features[0].place_name;
 
 campground.images =req.files.map(f=>({url:f.path, filename: f.filename})) // mapping over the pics to display them later
 campground.author=req.user._id;
 await campground.save();
 console.log(campground)
-console.log(req.files)
 req.flash('success', 'Successfully made a new campground')
 res.redirect(`/campgrounds/${campground._id}`)
 }
