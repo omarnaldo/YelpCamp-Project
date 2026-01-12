@@ -1,5 +1,9 @@
 const Campground = require('../models/campground.js');
 const { cloudinary } = require('../cloudinary');
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
+
+
 
 // rendering all camps
 module.exports.index = async (req,res) => {
@@ -15,7 +19,18 @@ module.exports.index = async (req,res) => {
 // add a camp
 
 module.exports.createCampground =  async(req,res, next)=>{
+const geoData = await maptilerClient.geocoding.forward(req.body.campground.location, { limit: 1 });
+    // console.log(geoData);
+    if (!geoData.features?.length) {
+        req.flash('error', 'Could not geocode that location. Please try again and enter a valid location.');
+        return res.redirect('/campgrounds/new');
+    }
+
 const campground= new Campground(req.body.campground);
+
+campground.geometry = geoData.features[0].geometry;
+    campground.location = geoData.features[0].place_name;
+
 campground.images =req.files.map(f=>({url:f.path, filename: f.filename})) // mapping over the pics to display them later
 campground.author=req.user._id;
 await campground.save();
