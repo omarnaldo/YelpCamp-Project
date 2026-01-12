@@ -44,13 +44,21 @@
 </div>
 </div>
 <div class="mb-3">
-  <% campground.images.forEach(function (img,i){ %>
-    <img src="<%= img.url %>" class="img-thumbnail" alt="">
-    <div class="form-control-inline">
-      <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
-    </div>
-    <label for="">Delete this one?</label>
+  <div class="row">
+    <% campground.images.forEach(function (img,i){ %>
+      <div class="col-6 col-md-4 mb-3">
+        <div class="card h-100">
+          <img src="<%= img.thumbnail %>" class="card-img-top" alt="">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="form-check mb-0">
+              <input class="form-check-input" type="checkbox" value="<%= img.filename %>" id="image-<%= i %>" name="deleteImages[]">
+              <label class="form-check-label ms-2" for="image-<%= i %>">Delete</label>
+            </div>
+          </div>
+        </div>
+      </div>
     <% }) %>
+  </div>
 </div>
 
 <div class="mb-4 mt-3"><button class="btn btn-success" >Edit Campground</button></div>

@@ -2,13 +2,17 @@ const mongoose= require('mongoose')
 const Schema= mongoose.Schema;
 const Review = require('./review')
 
+const ImageSchema = new Schema({
+    url:String,
+    filename:String
+})
+ImageSchema.virtual('thumbnail').get(function(){
+    return this.url.replace('/upload', '/upload/w_200');
+})
 const CampgroundSchema= new Schema({
     title: String,
     price:Number,
-    images: [{
-        url:String,
-        filename:String
-    }],
+    images: [ImageSchema],
     description: String,
     location: String ,
     author : {
@@ -19,7 +23,7 @@ const CampgroundSchema= new Schema({
         type: Schema.Types.ObjectId,
         ref:'Review'
     }]
-});
+}, { toObject: { virtuals: true }, toJSON: { virtuals: true } });
 
 
 // mongoose middelware to delete asscoted reviews after deleting the whole camp
