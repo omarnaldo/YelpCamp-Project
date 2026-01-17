@@ -3,8 +3,6 @@ if(process.env.NODE_ENV !=='production'){
 }
 
 const express= require('express');
-// var sanitize = require('mongo-sanitize');
-const  sanitize = require('mongo-sanitize');
 
 
 const path= require('path');
@@ -39,15 +37,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}))
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
-// app.use(sanitize())
 
 
 const sessionConfig = {
+    name: 'session',
    secret: 'this should be a better secret',
    resave :false,
    saveUninitialized :true,
    cookie: {
     httpOnly: true,
+   // secure: true,
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
     maxAge: 1000 * 60 * 60 * 24 * 7
 }

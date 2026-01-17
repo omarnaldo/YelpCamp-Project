@@ -20,13 +20,16 @@ module.exports.storeReturnTo = (req, res, next) => {
 
    // middleware for checking campground validation
 
- module.exports.validateCampground=(req,res,next)=>{
-   const {error} = campgroundSchema.validate(req.body.campground);
-   if(error){
-      const msg= error.details.map(el=>el.message).join(',')
-      throw new ExpressError(msg, 400)
-   }else{
-      next(); }}
+      module.exports.validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    console.log(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
 
 // middleware for checking authorization
 
